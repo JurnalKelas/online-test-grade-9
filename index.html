@@ -5923,9 +5923,10 @@ B. Climate change"></textarea>
                 : (track.audioType === 'url' ? track.audioUrl : null);
 
             if (audioSrc) {
-                currentCustomAudioObj = new Audio(audioSrc);
-                currentCustomAudioObj.play().catch(() => {
-                    showModal("Audio Error", "Unable to play external audio URL. Check the link or network connection.");
+                const resolvedAudioUrl = audioSrc.startsWith('data:') ? audioSrc : new URL(audioSrc, window.location.href).href;
+                currentCustomAudioObj = new Audio(resolvedAudioUrl);
+                currentCustomAudioObj.play().catch((err) => {
+                    showModal("Audio Error", "Gagal memutar: " + resolvedAudioUrl + " (" + err.message + ")");
                 });
                 if (btn) {
                     btn.disabled = true;
